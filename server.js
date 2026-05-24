@@ -451,11 +451,79 @@ app.delete('/api/blogs/clear-all', requireAuth, async (req, res) => {
   }
 });
 
+// Helper to automatically publish scheduled blogs that are due
+async function checkAndPublishScheduledBlogs() {
+  try {
+    const now = new Date();
+    // Find all scheduled blogs that are past their publish time
+    const overdueBlogs = await Blog.find({
+      status: 'scheduled',
+      scheduledAt: { $lte: now }
+    });
+
+    if (overdueBlogs.length > 0) {
+      console.log(`[Auto-Publish] Found ${overdueBlogs.length} due scheduled posts.`);
+      for (const blog of overdueBlogs) {
+        blog.status = 'published';
+        blog.updatedAt = now;
+        await blog.save();
+
+        // Create History record
+        const history = new History({
+          userId: blog.userId,
+          action: 'published',
+          blogTitle: blog.title,
+          blogId: blog._id,
+          createdAt: now
+        });
+        await history.save();
+
+        // Create Notification
+        const notification = new Notification({
+          userId: blog.userId,
+          type: 'success',
+          title: 'Scheduled Post Published',
+          message: `Your scheduled blog post "${blog.title}" has been automatically published!`,
+          createdAt: now
+        });
+        await notification.save();
+      }
+      console.log(`[Auto-Publish] Successfully published ${overdueBlogs.length} posts.`);
+    }
+    return overdueBlogs.length;
+  } catch (err) {
+    console.error('[Auto-Publish] Error in checkAndPublishScheduledBlogs:', err);
+    return 0;
+  }
+}
+
 // ==================== BLOG OPERATIONS ====================
+
+// GET Cron Publish (can be triggered by Vercel Cron or other schedules)
+app.get('/api/cron/publish', async (req, res) => {
+  try {
+    // Verify cron authorization if CRON_SECRET is set
+    const cronSecret = process.env.CRON_SECRET;
+    if (cronSecret) {
+      const authHeader = req.headers.authorization;
+      if (authHeader !== `Bearer ${cronSecret}`) {
+        return res.status(401).json({ success: false, error: 'Unauthorized' });
+      }
+    }
+
+    const publishedCount = await checkAndPublishScheduledBlogs();
+    res.json({ success: true, message: `Cron run complete. Published ${publishedCount} posts.` });
+  } catch (err) {
+    res.status(500).json({ success: false, error: err.message });
+  }
+});
 
 // GET all blogs (scoped to current user)
 app.get('/api/blogs', requireAuth, async (req, res) => {
   try {
+    // Auto-publish any scheduled posts that are due
+    await checkAndPublishScheduledBlogs();
+
     const { status, category, search } = req.query;
     let filter = { userId: req.session.userId };
 
@@ -628,6 +696,9 @@ app.delete('/api/blogs/:id', requireAuth, async (req, res) => {
 // GET stats (scoped to user)
 app.get('/api/stats', requireAuth, async (req, res) => {
   try {
+    // Auto-publish any scheduled posts that are due
+    await checkAndPublishScheduledBlogs();
+
     const [total, published, drafts, scheduled, trash] = await Promise.all([
       Blog.countDocuments({ userId: req.session.userId, status: { $ne: 'trash' } }),
       Blog.countDocuments({ userId: req.session.userId, status: 'published' }),
