@@ -503,6 +503,19 @@
             Save Draft
           </button>
         </div>
+
+        <!-- Schedule Options Panel -->
+        <div class="border-t border-primary/5 pt-2 flex flex-col gap-2">
+          <button id="toggleScheduleBtn" onclick="toggleSchedulePanel()" class="w-full glass-surface py-3 rounded-xl text-on-surface-variant font-bold text-[13px] hover:bg-white/70 transition-all flex items-center justify-center gap-2">
+            <span class="material-symbols-outlined text-primary" style="font-size:18px;">schedule</span>
+            <span id="scheduleBtnLabel">Schedule Post</span>
+          </button>
+          <div id="sidebarScheduleContainer" class="hidden flex flex-col gap-2 bg-white/20 dark:bg-black/10 rounded-2xl p-3 border border-white/40">
+            <label class="text-[11px] font-bold text-on-surface-variant/80">Select Publish Date & Time</label>
+            <input type="datetime-local" id="sidebarScheduledAtInput" class="w-full glass-surface px-4 py-2.5 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer text-on-surface-variant dark:text-eef0ff" />
+          </div>
+        </div>
+
         <button onclick="publishBlog()" class="w-full bg-primary text-white font-bold text-[14px] py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
           <span id="publishBtnText">Publish to Blog</span>
           <span class="material-symbols-outlined" style="font-size:18px;">send</span>
@@ -848,6 +861,18 @@
     document.getElementById('editorContent').addEventListener('input', handleContentChange);
     document.getElementById('statusSelect').addEventListener('change', handleStatusChange);
     document.addEventListener('mousemove', trackMouse);
+
+    // Sync datetime pickers
+    const schedInput = document.getElementById('scheduledAtInput');
+    const sideSchedInput = document.getElementById('sidebarScheduledAtInput');
+    if (schedInput && sideSchedInput) {
+      schedInput.addEventListener('input', (e) => {
+        sideSchedInput.value = e.target.value;
+      });
+      sideSchedInput.addEventListener('input', (e) => {
+        schedInput.value = e.target.value;
+      });
+    }
 
     await loadNotifications();
   }
@@ -1264,6 +1289,8 @@
           const localDate = new Date(d.getTime() - (offset * 60 * 1000));
           const localDt = localDate.toISOString().slice(0, 16);
           document.getElementById('scheduledAtInput').value = localDt;
+          const sidebarInput = document.getElementById('sidebarScheduledAtInput');
+          if (sidebarInput) sidebarInput.value = localDt;
         } catch(e) {
           console.error('Failed to parse scheduled date:', e);
         }
@@ -1473,13 +1500,69 @@
   function handleStatusChange(e) {
     const val = e ? e.target.value : document.getElementById('statusSelect').value;
     const container = document.getElementById('scheduledTimeContainer');
+    const sidebarContainer = document.getElementById('sidebarScheduleContainer');
+    const toggleBtn = document.getElementById('toggleScheduleBtn');
     const publishBtnText = document.getElementById('publishBtnText');
+    const scheduledAtInput = document.getElementById('scheduledAtInput');
+    const sidebarScheduledAtInput = document.getElementById('sidebarScheduledAtInput');
+
     if (val === 'scheduled') {
       container.classList.remove('hidden');
+      if (sidebarContainer) sidebarContainer.classList.remove('hidden');
+      if (toggleBtn) toggleBtn.classList.add('bg-primary/10', 'text-primary');
       if (publishBtnText) publishBtnText.textContent = 'Schedule Post';
+      
+      // Default time if empty
+      if (sidebarScheduledAtInput && !sidebarScheduledAtInput.value) {
+        const now = new Date();
+        now.setHours(now.getHours() + 1);
+        const offset = now.getTimezoneOffset();
+        const localDate = new Date(now.getTime() - (offset * 60 * 1000));
+        const localDt = localDate.toISOString().slice(0, 16);
+        sidebarScheduledAtInput.value = localDt;
+        scheduledAtInput.value = localDt;
+      }
     } else {
       container.classList.add('hidden');
+      if (sidebarContainer) sidebarContainer.classList.add('hidden');
+      if (toggleBtn) toggleBtn.classList.remove('bg-primary/10', 'text-primary');
       if (publishBtnText) publishBtnText.textContent = 'Publish to Blog';
+    }
+  }
+
+  function toggleSchedulePanel() {
+    const container = document.getElementById('sidebarScheduleContainer');
+    const toggleBtn = document.getElementById('toggleScheduleBtn');
+    const statusSelect = document.getElementById('statusSelect');
+    const scheduledAtInput = document.getElementById('scheduledAtInput');
+    const sidebarScheduledAtInput = document.getElementById('sidebarScheduledAtInput');
+    
+    if (container.classList.contains('hidden')) {
+      // Open panel, set status to scheduled
+      container.classList.remove('hidden');
+      toggleBtn.classList.add('bg-primary/10', 'text-primary');
+      statusSelect.value = 'scheduled';
+      handleStatusChange();
+      
+      // Set default date to 1 hour from now if empty
+      if (!sidebarScheduledAtInput.value) {
+        const now = new Date();
+        now.setHours(now.getHours() + 1);
+        const offset = now.getTimezoneOffset();
+        const localDate = new Date(now.getTime() - (offset * 60 * 1000));
+        const localDt = localDate.toISOString().slice(0, 16);
+        sidebarScheduledAtInput.value = localDt;
+        scheduledAtInput.value = localDt;
+      }
+    } else {
+      // Close panel, set status to draft
+      container.classList.add('hidden');
+      toggleBtn.classList.remove('bg-primary/10', 'text-primary');
+      
+      if (statusSelect.value === 'scheduled') {
+        statusSelect.value = 'draft';
+        handleStatusChange();
+      }
     }
   }
 
