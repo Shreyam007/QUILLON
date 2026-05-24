@@ -266,8 +266,14 @@
     100% { transform: scale(1.5); opacity: 0; }
   }
   .pulse-ring { animation: pulse-ring 1.8s ease-out infinite; }
-  ::-webkit-scrollbar { width: 6px; }
-  ::-webkit-scrollbar-thumb { background: rgba(70,72,212,0.2); border-radius: 3px; }
+    #previewBody p { margin-bottom: 1.25rem; font-size: 16px; line-height: 1.7; }
+  #previewBody h2 { font-size: 22px; font-weight: 700; color: #4648d4; margin-top: 2rem; margin-bottom: 1rem; }
+  #previewBody h3 { font-size: 18px; font-weight: 700; color: #4648d4; margin-top: 1.5rem; margin-bottom: 0.75rem; }
+  #previewBody ul { list-style-type: disc; padding-left: 1.5rem; margin-bottom: 1.25rem; }
+  #previewBody li { margin-bottom: 0.5rem; }
+  #previewBody a { color: #4648d4; text-decoration: underline; }
+  #previewBody img { max-width: 100%; border-radius: 12px; margin: 1.5rem 0; }
+  .dark #previewBody h2, .dark #previewBody h3 { color: #c0c1ff !important; }
 </style>
 </head>
 <body class="text-on-surface">
@@ -487,7 +493,7 @@
       <!-- Publishing Controls -->
       <div class="glass-elevated p-6 rounded-3xl flex flex-col gap-3">
         <div class="flex gap-2">
-          <button onclick="saveDraft()" class="flex-1 glass-surface py-3 rounded-xl text-on-surface-variant font-bold text-[13px] hover:bg-white/70 transition-all">
+          <button onclick="openPreviewModal()" class="flex-1 glass-surface py-3 rounded-xl text-on-surface-variant font-bold text-[13px] hover:bg-white/70 transition-all">
             Preview
           </button>
           <button onclick="saveDraft()" class="flex-1 glass-surface py-3 rounded-xl text-on-surface-variant font-bold text-[13px] hover:bg-white/70 transition-all">
@@ -720,6 +726,50 @@
             <span class="font-mono font-bold">→ &nbsp; v2.0.0</span>
           </div>
         </div>
+      </div>
+    </div>
+  </div>
+</div>
+<!-- Blog Preview Modal -->
+<div id="previewModal" class="fixed inset-0 z-[100] flex items-center justify-center p-4 lg:p-10 hidden">
+  <!-- Overlay -->
+  <div class="absolute inset-0 bg-primary/5 backdrop-blur-xl" onclick="closePreviewModal()"></div>
+  <!-- Modal Body -->
+  <div class="relative glass-elevated w-full max-w-4xl max-h-[85vh] rounded-[28px] shadow-2xl border-white/80 flex flex-col overflow-hidden">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-primary/10 px-8 py-5">
+      <div class="flex items-center gap-2">
+        <span class="material-symbols-outlined text-primary">visibility</span>
+        <span class="font-bold text-primary text-[15px] uppercase tracking-wider" style="font-family:'JetBrains Mono'">Post Preview</span>
+      </div>
+      <button onclick="closePreviewModal()" class="material-symbols-outlined text-on-surface-variant hover:text-error transition-colors">close</button>
+    </div>
+    
+    <!-- Blog Preview Content (Scrollable) -->
+    <div class="flex-1 overflow-y-auto px-8 py-10 lg:px-16 lg:py-14 bg-white/40 dark:bg-slate-900/40">
+      <!-- Title -->
+      <h1 id="previewTitle" class="text-3xl lg:text-4xl font-extrabold text-primary mb-4 leading-tight"></h1>
+      
+      <!-- Meta -->
+      <div class="flex items-center gap-3 flex-wrap text-xs text-on-surface-variant/80 border-b border-primary/5 pb-6 mb-8">
+        <span id="previewCategory" class="bg-primary/10 text-primary font-bold px-3 py-1 rounded-full uppercase tracking-wider text-[10px]"></span>
+        <div class="w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">person</span>
+          <span id="previewAuthor" class="font-semibold"></span>
+        </span>
+        <div class="w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+        <span class="flex items-center gap-1">
+          <span class="material-symbols-outlined text-[14px]">calendar_today</span>
+          <span id="previewDate"></span>
+        </span>
+        <div class="w-1.5 h-1.5 rounded-full bg-primary/20"></div>
+        <span id="previewStatus" class="capitalize font-medium"></span>
+      </div>
+
+      <!-- Main Body content -->
+      <div id="previewBody" class="prose max-w-none text-on-surface leading-relaxed text-[16px] space-y-4">
+        <!-- Rendered dynamically -->
       </div>
     </div>
   </div>
@@ -1509,6 +1559,40 @@
   }
 
   function goBack() { window.location.href = '/'; }
+
+  // ── Preview Modal ──────────────────────────────────────────────
+  function openPreviewModal() {
+    const title = document.getElementById('titleInput').value.trim() || 'Untitled Post';
+    const content = document.getElementById('editorContent').innerHTML.trim() || '<p class="text-on-surface-variant/50 italic">Start writing something to preview here...</p>';
+    const category = document.getElementById('categorySelect').value;
+    const author = document.getElementById('authorInput').value.trim() || (currentUser ? currentUser.name : 'Alex Rivera');
+    const status = document.getElementById('statusSelect').value;
+    const date = new Date().toLocaleDateString('en-US', { month: 'long', day: 'numeric', year: 'numeric' });
+
+    document.getElementById('previewTitle').textContent = title;
+    document.getElementById('previewCategory').textContent = category;
+    document.getElementById('previewAuthor').textContent = author;
+    document.getElementById('previewDate').textContent = date;
+    document.getElementById('previewStatus').textContent = status;
+    document.getElementById('previewBody').innerHTML = content;
+
+    // Apply status classes based on status selection for visual styling
+    const statusEl = document.getElementById('previewStatus');
+    statusEl.className = 'capitalize font-bold text-[11px] px-2.5 py-0.5 rounded-md ';
+    if (status === 'published') {
+      statusEl.className += 'bg-green-100 text-green-800 dark:bg-green-900/30 dark:text-green-400';
+    } else if (status === 'scheduled') {
+      statusEl.className += 'bg-blue-100 text-blue-800 dark:bg-blue-900/30 dark:text-blue-400';
+    } else {
+      statusEl.className += 'bg-yellow-100 text-yellow-800 dark:bg-yellow-900/30 dark:text-yellow-400';
+    }
+
+    document.getElementById('previewModal').classList.remove('hidden');
+  }
+
+  function closePreviewModal() {
+    document.getElementById('previewModal').classList.add('hidden');
+  }
 
   // ── AI Modal ──────────────────────────────────────────────────
   function showAIModal() {
