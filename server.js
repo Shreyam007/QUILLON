@@ -1013,6 +1013,11 @@ app.get('/', requireAuth, (req, res) => res.sendFile(path.join(__dirname, 'publi
 app.get('/editor', requireAuth, (req, res) => res.sendFile(path.join(__dirname, 'public', 'editor.html')));
 app.get('/editor/:id', requireAuth, (req, res) => res.sendFile(path.join(__dirname, 'public', 'editor.html')));
 
-app.listen(PORT, () => {
-  console.log(`🚀 Quillon Blog Manager running at http://localhost:${PORT}`);
-});
+// Export the app for Vercel Serverless Functions
+module.exports = app;
+
+if (require.main === module) {
+  app.listen(PORT, () => {
+    console.log(`🚀 Quillon Blog Manager running at http://localhost:${PORT}`);
+  });
+}
