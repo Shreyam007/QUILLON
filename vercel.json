@@ -1,4 +1,5 @@
 {
+  "name": "quillon-blog-manager",
   "version": 2,
   "builds": [
     {
