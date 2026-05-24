@@ -7,3 +7,5 @@ yarn-debug.log*
 yarn-error.log*
 .idea/
 .vscode/
+*.pdf
+Quillon_Project_Architecture_Guide.pdf
