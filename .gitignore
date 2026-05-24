@@ -9,3 +9,4 @@ yarn-error.log*
 .vscode/
 *.pdf
 Quillon_Project_Architecture_Guide.pdf
+.vercel
