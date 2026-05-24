@@ -1,0 +1,1602 @@
+<!DOCTYPE html>
+<html class="light" lang="en">
+<head>
+<script>
+  (function() {
+    const savedTheme = localStorage.getItem('lumina-theme') || 'light';
+    if (savedTheme === 'dark' || (savedTheme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    }
+  })();
+</script>
+<meta charset="utf-8"/>
+<meta content="width=device-width, initial-scale=1.0" name="viewport"/>
+<title>New Post - Quillon</title>
+<link rel="icon" type="image/svg+xml" href="/logo.svg" />
+<meta name="description" content="Create and edit your blog posts with AI-powered tools in Quillon."/>
+<script src="https://cdn.tailwindcss.com?plugins=forms,container-queries"></script>
+<link href="https://fonts.googleapis.com/css2?family=Manrope:wght@400;500;600;700;800&family=Outfit:wght@400;500;600;700;800&family=Montserrat:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500&display=swap" rel="stylesheet"/>
+<link href="https://fonts.googleapis.com/css2?family=Material+Symbols+Outlined:wght,FILL@100..700,0..1&display=swap" rel="stylesheet"/>
+<script id="tailwind-config">
+  tailwind.config = {
+    darkMode: "class",
+    theme: {
+      extend: {
+        colors: {
+          "tertiary-container": "#008376",
+          "surface-container": "#eaedff",
+          "on-primary-fixed": "#07006c",
+          "secondary": "#8127cf",
+          "on-surface": "#131b2e",
+          "background": "#faf8ff",
+          "surface-variant": "#dae2fd",
+          "inverse-primary": "#c0c1ff",
+          "secondary-container": "#9c48ea",
+          "primary-container": "#6063ee",
+          "tertiary": "#00685d",
+          "on-secondary": "#ffffff",
+          "on-error": "#ffffff",
+          "outline-variant": "#c7c4d7",
+          "surface-bright": "#faf8ff",
+          "inverse-on-surface": "#eef0ff",
+          "surface-container-high": "#e2e7ff",
+          "secondary-fixed": "#f0dbff",
+          "on-primary": "#ffffff",
+          "surface-tint": "#494bd6",
+          "error": "#ba1a1a",
+          "on-primary-container": "#fffbff",
+          "on-surface-variant": "#464554",
+          "primary": "#4648d4",
+          "surface": "#faf8ff",
+          "on-tertiary": "#ffffff",
+          "inverse-surface": "#283044",
+          "on-background": "#131b2e",
+          "surface-dim": "#d2d9f4",
+          "outline": "#767586",
+        },
+        borderRadius: {
+          "DEFAULT": "0.25rem",
+          "lg": "0.5rem",
+          "xl": "0.75rem",
+          "full": "9999px"
+        },
+        fontFamily: {
+          "display-lg": ["Manrope"],
+          "body-md": ["Manrope"],
+          "label-caps": ["JetBrains Mono"],
+          "headline-md": ["Manrope"]
+        }
+      }
+    }
+  }
+</script>
+<style>
+  * { font-family: 'Manrope', sans-serif; }
+  h1, h2, h3 { font-family: 'Outfit', sans-serif; }
+  .glass-surface {
+    backdrop-filter: blur(12px);
+    background: rgba(255, 255, 255, 0.4);
+    border-top: 1px solid rgba(255, 255, 255, 0.5);
+    border-left: 1px solid rgba(255, 255, 255, 0.5);
+    border-bottom: 1px solid rgba(70, 72, 212, 0.1);
+    border-right: 1px solid rgba(70, 72, 212, 0.1);
+  }
+  .glass-elevated {
+    backdrop-filter: blur(20px);
+    background: rgba(255, 255, 255, 0.65);
+    border-top: 1px solid rgba(255, 255, 255, 0.9);
+    border-left: 1px solid rgba(255, 255, 255, 0.9);
+    box-shadow: 0 4px 32px rgba(0,0,0,0.05);
+  }
+  .ai-shimmer {
+    background: linear-gradient(110deg, #4648d4 45%, rgba(255, 255, 255, 0.25) 50%, #4648d4 55%);
+    background-size: 200% 100%;
+    animation: shimmer 2.2s linear infinite;
+  }
+  @keyframes shimmer {
+    0%   { background-position: 100% 0%; }
+    100% { background-position: -100% 0%; }
+  }
+  body {
+    background: radial-gradient(circle at var(--mx,30%) var(--my,20%), #e2e7ff 0%, #faf8ff 50%, #f0dbff 100%);
+    min-height: 100vh;
+    transition: background 0.2s ease;
+  }
+  
+  /* Dark mode overrides */
+  .dark {
+    --bg-mesh: radial-gradient(circle at var(--mx,30%) var(--my,20%), #1a1b4b 0%, #0a0b10 50%, #150920 100%);
+  }
+  .dark body {
+    background: var(--bg-mesh);
+    color: #eef0ff;
+  }
+  .dark .glass-surface {
+    background: rgba(10, 11, 16, 0.5);
+    border-top: 1px solid rgba(255, 255, 255, 0.08);
+    border-left: 1px solid rgba(255, 255, 255, 0.08);
+    border-bottom: 1px solid rgba(70, 72, 212, 0.05);
+    border-right: 1px solid rgba(70, 72, 212, 0.05);
+  }
+  .dark .glass-elevated {
+    background: rgba(15, 16, 26, 0.75);
+    border: 1px solid rgba(255, 255, 255, 0.12);
+    box-shadow: 0 8px 32px rgba(0, 0, 0, 0.4);
+  }
+  .dark header {
+    background: rgba(10, 11, 16, 0.5) !important;
+    border-color: rgba(255, 255, 255, 0.08) !important;
+  }
+  .dark select, .dark input, .dark textarea {
+    background-color: rgba(15, 16, 26, 0.6) !important;
+    border-color: rgba(255, 255, 255, 0.12) !important;
+    color: #eef0ff !important;
+  }
+  .dark select option {
+    background: #0f101a !important;
+    color: #eef0ff !important;
+  }
+  .dark select:focus, .dark input:focus, .dark textarea:focus {
+    background: rgba(15, 16, 26, 0.8) !important;
+    border-color: #4648d4 !important;
+  }
+  .dark .text-on-surface-variant {
+    color: #a0aec0 !important;
+  }
+  .dark .text-on-surface {
+    color: #eef0ff !important;
+  }
+  .dark h2, .dark h3 {
+    color: #eef0ff !important;
+  }
+  .dark #editorContent {
+    color: #cbd5e0 !important;
+  }
+  .dark .seo-item {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.05);
+    color: #eef0ff;
+  }
+  .dark .seo-item:hover {
+    background: rgba(255, 255, 255, 0.07);
+    border-color: rgba(96, 99, 238, 0.4);
+  }
+  .dark .seo-item.selected {
+    background: rgba(96, 99, 238, 0.15);
+    border-color: rgba(96, 99, 238, 0.5);
+    color: #c0c1ff;
+  }
+  .dark .toolbar-btn {
+    color: #a0aec0;
+  }
+  .dark .toolbar-btn:hover {
+    color: #c0c1ff;
+    background: rgba(255, 255, 255, 0.05);
+  }
+  .dark .tone-btn {
+    background: rgba(255, 255, 255, 0.03);
+    border-color: rgba(255, 255, 255, 0.08);
+    color: #a0aec0;
+  }
+  .dark .tone-btn.active {
+    background: rgba(96, 99, 238, 0.2);
+    color: #c0c1ff;
+    border-color: rgba(96, 99, 238, 0.5);
+  }
+  .dark .toast {
+    background: #eef0ff;
+    color: #0f101a;
+  }
+  #notificationDropdown, #profileDropdown {
+    background-color: #ffffff !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+  }
+  .dark #notificationDropdown, .dark #profileDropdown {
+    background-color: #0f101a !important;
+    backdrop-filter: none !important;
+    -webkit-backdrop-filter: none !important;
+    border-color: rgba(255, 255, 255, 0.1) !important;
+  }
+  .dark #notificationDropdown div, .dark #notificationDropdown span,
+  .dark #profileDropdown div, .dark #profileDropdown span, .dark #profileDropdown button {
+    color: #eef0ff;
+  }
+  .dark #notificationDropdown .text-on-surface-variant, .dark #profileDropdown .text-on-surface-variant {
+    color: #a0aec0 !important;
+  }
+  .dark #notificationsList .border {
+    border-color: rgba(255,255,255,0.06) !important;
+  }
+  
+  #editorContent {
+    outline: none;
+    min-height: 400px;
+    line-height: 1.8;
+    font-size: 16px;
+    color: #464554;
+  }
+  #editorContent:empty::before {
+    content: attr(data-placeholder);
+    color: rgba(70,69,84,0.35);
+    pointer-events: none;
+  }
+  .seo-item {
+    padding: 10px 14px; border-radius: 12px;
+    border: 1px solid rgba(255,255,255,0.5);
+    background: rgba(255,255,255,0.25);
+    cursor: pointer; transition: all 0.18s ease;
+    font-size: 13px; color: #131b2e; line-height: 1.4;
+  }
+  .seo-item:hover { background: rgba(255,255,255,0.65); border-color: rgba(70,72,212,0.3); }
+  .seo-item.selected { background: rgba(70,72,212,0.08); border-color: rgba(70,72,212,0.35); color: #4648d4; font-weight: 700; }
+  .toolbar-btn {
+    padding: 8px; border-radius: 8px; cursor: pointer;
+    color: #464554; transition: all 0.15s ease;
+    background: none; border: none; font-size: 18px;
+    font-family: inherit; display: flex; align-items: center; justify-content: center;
+  }
+  .toolbar-btn:hover { background: rgba(70,72,212,0.1); color: #4648d4; }
+  .toolbar-btn.active-fmt { background: rgba(70,72,212,0.15); color: #4648d4; }
+  .tone-btn {
+    padding: 6px 16px; border-radius: 100px; cursor: pointer;
+    font-weight: 600; font-size: 13px; transition: all 0.18s ease;
+    border: 1px solid rgba(70,72,212,0.2);
+    background: rgba(255,255,255,0.4); backdrop-filter: blur(8px);
+    color: #464554;
+  }
+  .tone-btn.active { background: rgba(70,72,212,0.12); color: #4648d4; border-color: rgba(70,72,212,0.4); font-weight: 700; }
+  .toast {
+    position: fixed; bottom: 24px; left: 50%; transform: translateX(-50%);
+    padding: 12px 28px; border-radius: 100px;
+    font-size: 14px; font-weight: 600; z-index: 9999;
+    opacity: 0; pointer-events: none; transition: opacity 0.3s ease;
+    white-space: nowrap;
+  }
+  .toast.show { opacity: 1; }
+  .toast.success { background: #131b2e; color: white; }
+  .toast.error-t { background: #ba1a1a; color: white; }
+  #aiModal { transition: opacity 0.2s ease; }
+  @keyframes pulse-ring {
+    0%   { transform: scale(1); opacity: 0.4; }
+    100% { transform: scale(1.5); opacity: 0; }
+  }
+  .pulse-ring { animation: pulse-ring 1.8s ease-out infinite; }
+  ::-webkit-scrollbar { width: 6px; }
+  ::-webkit-scrollbar-thumb { background: rgba(70,72,212,0.2); border-radius: 3px; }
+</style>
+</head>
+<body class="text-on-surface">
+
+<!-- Toast -->
+<div class="toast success" id="toast"></div>
+
+<!-- Top Nav -->
+<header class="sticky top-0 z-50 flex items-center justify-between px-8 w-full bg-white/50 backdrop-blur-md border-b border-white/60 shadow-sm h-[60px] relative">
+  <a href="/" class="flex items-center gap-2 hover:opacity-80 transition-opacity">
+    <svg class="w-7 h-7" xmlns="http://www.w3.org/2000/svg" viewBox="0 0 100 100">
+      <circle class="stroke-current text-slate-800 dark:text-white transition-colors" cx="50" cy="50" r="36" fill="none" stroke-width="4.5" />
+    </svg>
+    <span class="text-black dark:text-white uppercase tracking-[0.35em] mr-[-0.35em]" style="font-family:'Montserrat',sans-serif;font-size:14px;font-weight:700;line-height:1;">Quillon</span>
+  </a>
+
+  <nav class="hidden md:flex gap-6 absolute left-1/2 -translate-x-1/2 top-1/2 -translate-y-1/2">
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-[14px] font-medium" href="/">Dashboard</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-[14px] font-medium" href="#" onclick="showToast('Please view Analytics on the Dashboard'); return false;">Analytics</a>
+    <a class="text-on-surface-variant hover:text-primary transition-colors text-[14px] font-medium" href="#" onclick="openHelpModal(); return false;">Help</a>
+  </nav>
+  <div class="flex items-center gap-3">
+    
+    <!-- Notifications bell -->
+    <div class="relative">
+      <button id="notificationBtn" onclick="toggleNotifications(event)" class="material-symbols-outlined text-on-surface-variant hover:bg-white/30 p-2 rounded-full transition-all relative">
+        notifications
+        <span id="notificationBadge" class="hidden absolute top-1.5 right-1.5 h-2.5 w-2.5 rounded-full bg-error border border-white"></span>
+      </button>
+      <!-- Notifications Dropdown -->
+      <div id="notificationDropdown" class="hidden absolute right-0 mt-3 w-80 bg-white rounded-2xl shadow-2xl z-50 p-4 border border-outline-variant/30 flex flex-col gap-3">
+        <div class="flex items-center justify-between pb-2 border-b border-primary/10">
+          <h4 class="text-[13px] font-bold text-primary flex items-center gap-1.5">
+            <span class="material-symbols-outlined" style="font-size:16px;">notifications</span> Notifications
+          </h4>
+          <div class="flex gap-2">
+            <button onclick="markAllNotificationsRead(event)" class="text-[10px] font-bold text-primary hover:underline">Read All</button>
+            <button onclick="clearAllNotifications(event)" class="text-[10px] font-bold text-error hover:underline">Clear All</button>
+          </div>
+        </div>
+        <div id="notificationsList" class="flex flex-col gap-2 max-h-60 overflow-y-auto pr-1 text-xs">
+          <!-- Loaded dynamically -->
+        </div>
+      </div>
+    </div>
+    
+    <button onclick="openProfileSettingsModal(event)" class="material-symbols-outlined text-on-surface-variant hover:bg-white/30 p-2 rounded-full transition-all" title="Settings">settings</button>
+    
+    <!-- User Profile Dropdown -->
+    <div class="relative">
+      <div onclick="toggleProfileDropdown(event)" class="w-8 h-8 rounded-full overflow-hidden border border-primary/20 cursor-pointer hover:scale-105 transition-transform">
+        <img id="headerUserAvatar" alt="Profile" class="w-full h-full object-cover" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbAQSEOGn1UCtLYELW_vl5ZG65cM6cgj0ou4FVF8s96qcQKqxKez1d8OpUDOm4A3aY-yV8jFovGuo3toAe2KLrJbHm6Mf4tVxMNHZeZNszENce1RpnsDVFpcpznzpAtWDmLkuoOUoyuouGOc5Vrc_MI-Wfd682tYBJRTg3wJXc6v06B5_wYzE49Txstt70UbNnHmj7oHXW5NzIEz35iqoB5UR-PokDi1pB9PQngy1iUlEGqNGEwHhK9ZQ74kGpe7vBgd8_86coVfw0"/>
+      </div>
+      <!-- Profile Dropdown -->
+      <div id="profileDropdown" class="hidden absolute right-0 mt-3 w-56 bg-white rounded-2xl shadow-2xl z-50 p-4 border border-outline-variant/30 flex flex-col gap-3">
+        <div class="flex items-center gap-3 pb-2.5 border-b border-primary/10">
+          <div class="h-10 w-10 rounded-full overflow-hidden border border-primary/20">
+            <img id="dropdownUserAvatar" alt="Profile" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbAQSEOGn1UCtLYELW_vl5ZG65cM6cgj0ou4FVF8s96qcQKqxKez1d8OpUDOm4A3aY-yV8jFovGuo3toAe2KLrJbHm6Mf4tVxMNHZeZNszENce1RpnsDVFpcpznzpAtWDmLkuoOUoyuouGOc5Vrc_MI-Wfd682tYBJRTg3wJXc6v06B5_wYzE49Txstt70UbNnHmj7oHXW5NzIEz35iqoB5UR-PokDi1pB9PQngy1iUlEGqNGEwHhK9ZQ74kGpe7vBgd8_86coVfw0" class="w-full h-full object-cover"/>
+          </div>
+          <div class="flex flex-col min-w-0">
+            <span id="profileDisplayName" class="text-[13px] font-bold text-on-surface truncate">Demo User</span>
+            <span id="profileDisplayEmail" class="text-[10px] text-on-surface-variant truncate">interviewer@quillon.ai</span>
+          </div>
+        </div>
+        <button onclick="openProfileSettingsModal(event)" class="flex items-center gap-2 text-on-surface-variant hover:text-primary transition-colors text-[13px] font-medium text-left">
+          <span class="material-symbols-outlined" style="font-size:18px;">settings</span> Settings
+        </button>
+        <button onclick="logoutUser(event)" class="flex items-center gap-2 text-error hover:text-error/80 transition-colors text-[13px] font-bold text-left">
+          <span class="material-symbols-outlined" style="font-size:18px;">logout</span> Logout
+        </button>
+      </div>
+    </div>
+
+  </div>
+</header>
+
+<!-- Main -->
+<main class="max-w-[1200px] mx-auto px-4 lg:px-10 py-10 flex flex-col gap-8">
+
+  <!-- AI Entry Point -->
+  <section class="w-full">
+    <div class="glass-surface p-7 rounded-3xl flex flex-col lg:flex-row gap-8 items-center">
+      <div class="flex-1 space-y-5">
+        <h2 class="text-[20px] font-bold text-primary flex items-center gap-2">
+          <span class="material-symbols-outlined" style="font-variation-settings:'FILL' 1;font-size:22px;">magic_button</span>
+          Write with AI
+        </h2>
+        <p class="text-on-surface-variant text-[14px] leading-relaxed max-w-md">Enter your topic and let Quillon's AI craft a high-performance blog post for you.</p>
+
+        <div class="relative mt-2">
+          <input id="aiPrompt" class="w-full bg-white/60 border border-white/70 rounded-2xl py-4 px-5 pr-40 focus:ring-2 focus:ring-primary/20 focus:border-primary transition-all outline-none text-[16px]" placeholder="What's on your mind today?" type="text" onkeydown="if(event.key==='Enter')generateDraft()"/>
+          <div class="absolute right-2 top-2 bottom-2">
+            <button onclick="generateDraft()" class="ai-shimmer text-white px-5 h-full rounded-xl font-bold text-[13px] flex items-center gap-2 hover:scale-[1.02] transition-transform shadow-lg">
+              Generate Draft
+              <span class="material-symbols-outlined" style="font-size:16px;">auto_awesome</span>
+            </button>
+          </div>
+        </div>
+
+        <div class="flex flex-wrap gap-2 items-center">
+          <span style="font-family:'JetBrains Mono';font-size:11px;font-weight:500;text-transform:uppercase;letter-spacing:0.05em;color:#464554;">Tone:</span>
+          <button class="tone-btn active" onclick="setTone(this,'Professional')">Professional</button>
+          <button class="tone-btn" onclick="setTone(this,'Formal')">Formal</button>
+          <button class="tone-btn" onclick="setTone(this,'Casual')">Casual</button>
+        </div>
+      </div>
+
+    </div>
+  </section>
+
+  <!-- Editor + Sidebar -->
+  <div class="grid grid-cols-1 lg:grid-cols-12 gap-8 items-start">
+
+    <!-- Editor Area -->
+    <div class="lg:col-span-8 flex flex-col gap-5">
+
+      <!-- Category & Tags row -->
+      <div class="flex items-center gap-3 flex-wrap">
+        <div class="relative">
+          <select id="categorySelect" class="appearance-none glass-surface pl-4 pr-10 py-2 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer">
+            <option value="General">General</option>
+            <option value="Technology">Technology</option>
+            <option value="Design">Design</option>
+            <option value="Philosophy">Philosophy</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" style="font-size: 16px;">expand_more</span>
+        </div>
+        <input id="tagsInput" class="glass-surface px-4 py-2 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/20 flex-1 min-w-0" placeholder="Tags (comma separated)" type="text"/>
+        <div class="relative">
+          <select id="statusSelect" class="appearance-none glass-surface pl-4 pr-10 py-2 rounded-xl text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/20 cursor-pointer">
+            <option value="draft">Draft</option>
+            <option value="published">Published</option>
+            <option value="scheduled">Scheduled</option>
+          </select>
+          <span class="material-symbols-outlined absolute right-2.5 top-1/2 -translate-y-1/2 pointer-events-none text-on-surface-variant" style="font-size: 16px;">expand_more</span>
+        </div>
+      </div>
+
+      <!-- Writing Card -->
+      <div class="glass-elevated rounded-3xl p-8 lg:p-12 min-h-[640px] relative flex flex-col">
+        <!-- Title -->
+        <input id="titleInput" class="w-full bg-transparent border-none focus:ring-0 p-0 mb-8 placeholder:text-surface-dim/80 text-primary font-extrabold outline-none" placeholder="Enter title..." type="text"
+          style="font-size:clamp(26px,3vw,38px);line-height:1.2;letter-spacing:-0.02em;"/>
+
+        <!-- Toolbar -->
+        <div class="flex items-center gap-1 mb-5 pb-4 border-b border-primary/10 flex-wrap">
+          <button class="toolbar-btn" onclick="fmt('bold')" title="Bold"><b>B</b></button>
+          <button class="toolbar-btn" onclick="fmt('italic')" title="Italic"><i>I</i></button>
+          <button class="toolbar-btn" onclick="fmt('underline')" title="Underline" style="text-decoration:underline;">U</button>
+          <div class="w-px h-5 bg-primary/15 mx-1"></div>
+          <button class="toolbar-btn" onclick="insertHeading()" title="Heading">
+            <span class="material-symbols-outlined" style="font-size:18px;">title</span>
+          </button>
+          <button class="toolbar-btn" onclick="fmt('insertUnorderedList')" title="List">
+            <span class="material-symbols-outlined" style="font-size:18px;">list</span>
+          </button>
+          <button class="toolbar-btn" onclick="insertLink()" title="Link">
+            <span class="material-symbols-outlined" style="font-size:18px;">link</span>
+          </button>
+          <button class="toolbar-btn" onclick="insertImage()" title="Image">
+            <span class="material-symbols-outlined" style="font-size:18px;">image</span>
+          </button>
+          <div class="w-px h-5 bg-primary/15 mx-1"></div>
+          <button class="toolbar-btn" onclick="fmt('removeFormat')" title="Clear Formatting">
+            <span class="material-symbols-outlined" style="font-size:18px;">format_clear</span>
+          </button>
+          <button id="enhanceBtn" class="ai-shimmer p-2 rounded-lg text-white material-symbols-outlined ml-auto hover:scale-105 transition-transform" onclick="enhanceWithAI()" title="Enhance with AI" style="font-size:18px;">auto_awesome</button>
+        </div>
+
+        <!-- Editor -->
+        <div id="editorContent" contenteditable="true" data-placeholder="Start writing your story here... Press Enter for a new paragraph." class="flex-1 outline-none"></div>
+
+        <!-- Word Count -->
+        <div class="mt-4 pt-3 border-t border-primary/8 flex items-center justify-between">
+          <span id="wordCount" style="font-family:'JetBrains Mono';font-size:11px;color:#767586;">0 words</span>
+          <span id="lastSaved" style="font-family:'JetBrains Mono';font-size:11px;color:#767586;">Not saved yet</span>
+        </div>
+      </div>
+    </div>
+
+    <!-- Sidebar -->
+    <aside class="lg:col-span-4 flex flex-col gap-5">
+
+      <!-- SEO Suggestions -->
+      <div class="glass-surface p-6 rounded-3xl">
+        <h3 class="text-[16px] font-bold text-primary mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined" style="font-size:18px;">search</span>
+          SEO Title Suggestions
+        </h3>
+        <div class="flex flex-col gap-2" id="seoList">
+          <div class="seo-item text-on-surface-variant/50 italic text-[13px]">Enter a title to get SEO suggestions...</div>
+        </div>
+      </div>
+
+      <!-- Auto Summary -->
+      <div class="glass-surface p-6 rounded-3xl">
+        <h3 class="text-[16px] font-bold text-primary mb-4 flex items-center gap-2">
+          <span class="material-symbols-outlined" style="font-size:18px;">summarize</span>
+          AI Auto-Summary
+        </h3>
+        <textarea id="summaryText" class="w-full bg-white/50 border border-white/70 rounded-xl p-4 text-[13px] text-on-surface-variant focus:ring-primary/20 focus:border-primary focus:bg-white/70 transition-all resize-none outline-none" rows="4" placeholder="AI will generate a summary based on your content..."></textarea>
+        <button onclick="generateSummary()" class="mt-3 w-full text-primary font-bold text-[13px] py-2 hover:bg-primary-container/10 rounded-lg transition-colors flex items-center justify-center gap-2">
+          <span class="material-symbols-outlined" style="font-size:16px;">refresh</span>
+          Regenerate Summary
+        </button>
+      </div>
+
+      <!-- Author -->
+      <div class="glass-surface p-5 rounded-3xl">
+        <h3 class="text-[16px] font-bold text-primary mb-3 flex items-center gap-2">
+          <span class="material-symbols-outlined" style="font-size:18px;">person</span>
+          Author
+        </h3>
+        <input id="authorInput" class="w-full bg-white/50 border border-white/70 rounded-xl px-4 py-2.5 text-[13px] focus:outline-none focus:ring-2 focus:ring-primary/20" value="Alex Rivera" placeholder="Author name"/>
+      </div>
+
+      <!-- Publishing Controls -->
+      <div class="glass-elevated p-6 rounded-3xl flex flex-col gap-3">
+        <div class="flex gap-2">
+          <button onclick="saveDraft()" class="flex-1 glass-surface py-3 rounded-xl text-on-surface-variant font-bold text-[13px] hover:bg-white/70 transition-all">
+            Preview
+          </button>
+          <button onclick="saveDraft()" class="flex-1 glass-surface py-3 rounded-xl text-on-surface-variant font-bold text-[13px] hover:bg-white/70 transition-all">
+            Save Draft
+          </button>
+        </div>
+        <button onclick="publishBlog()" class="w-full bg-primary text-white font-bold text-[14px] py-4 rounded-xl hover:bg-primary/90 transition-all shadow-lg shadow-primary/20 flex items-center justify-center gap-2">
+          Publish to Blog
+          <span class="material-symbols-outlined" style="font-size:18px;">send</span>
+        </button>
+        <button onclick="goBack()" class="w-full text-on-surface-variant font-medium text-[13px] py-2 hover:text-error transition-colors flex items-center justify-center gap-1">
+          <span class="material-symbols-outlined" style="font-size:16px;">arrow_back</span>
+          Back to Dashboard
+        </button>
+      </div>
+
+    </aside>
+  </div>
+</main>
+
+<!-- Settings Modal -->
+<div id="profileSettingsModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+  <div class="absolute inset-0 bg-primary/5 backdrop-blur-xl" onclick="closeProfileSettingsModal()"></div>
+  <div class="relative glass-elevated w-full max-w-lg rounded-3xl p-8 shadow-2xl border-white/80 flex flex-col gap-5">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-primary/10 pb-3">
+      <h3 class="text-[18px] font-bold text-primary flex items-center gap-2">
+        <span class="material-symbols-outlined">settings</span> Settings
+      </h3>
+      <button onclick="closeProfileSettingsModal()" class="material-symbols-outlined text-on-surface-variant hover:text-error">close</button>
+    </div>
+    
+    <!-- Tab Controls -->
+    <div class="flex border-b border-primary/5 pb-2 gap-4 text-xs font-bold uppercase tracking-wider" style="font-family:'JetBrains Mono'">
+      <button onclick="switchSettingsTab('appearance')" id="tabBtn-appearance" class="pb-1 border-b-2 border-primary text-primary">Appearance</button>
+      <button onclick="switchSettingsTab('notifications')" id="tabBtn-notifications" class="pb-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary">Notifications</button>
+      <button onclick="switchSettingsTab('privacy')" id="tabBtn-privacy" class="pb-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary">Data & Privacy</button>
+      <button onclick="switchSettingsTab('profile')" id="tabBtn-profile" class="pb-1 border-b-2 border-transparent text-on-surface-variant hover:text-primary">Profile</button>
+    </div>
+
+    <!-- Tab Contents -->
+    <div id="tabContent-appearance" class="flex flex-col gap-4">
+      <div class="flex flex-col gap-2">
+        <span class="text-xs font-bold text-on-surface-variant">Theme Selection</span>
+        <div class="grid grid-cols-3 gap-3">
+          <button onclick="setThemePreference('light')" id="themeBtn-light" class="p-3 border rounded-xl flex flex-col items-center gap-1.5 hover:bg-primary/5 transition-all text-xs font-bold border-primary/20">
+            <span class="material-symbols-outlined text-[20px] text-primary">light_mode</span>
+            Light
+          </button>
+          <button onclick="setThemePreference('dark')" id="themeBtn-dark" class="p-3 border rounded-xl flex flex-col items-center gap-1.5 hover:bg-primary/5 transition-all text-xs font-bold border-primary/20">
+            <span class="material-symbols-outlined text-[20px] text-primary">dark_mode</span>
+            Dark
+          </button>
+          <button onclick="setThemePreference('system')" id="themeBtn-system" class="p-3 border rounded-xl flex flex-col items-center gap-1.5 hover:bg-primary/5 transition-all text-xs font-bold border-primary/20">
+            <span class="material-symbols-outlined text-[20px] text-primary">desktop_windows</span>
+            System
+          </button>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabContent-notifications" class="hidden flex flex-col gap-4">
+      <div class="flex flex-col gap-3">
+        <div class="flex items-center justify-between p-3 rounded-xl border border-primary/10">
+          <div class="flex flex-col">
+            <span class="text-xs font-bold text-on-surface">Email Notifications</span>
+            <span class="text-[10px] text-on-surface-variant">Send reports & system logs</span>
+          </div>
+          <input type="checkbox" id="emailNotificationsCheck" class="rounded border-primary/20 text-primary focus:ring-primary/20 h-5 w-5"/>
+        </div>
+        <div class="flex items-center justify-between p-3 rounded-xl border border-primary/10">
+          <div class="flex flex-col">
+            <span class="text-xs font-bold text-on-surface">Browser Notifications</span>
+            <span class="text-[10px] text-on-surface-variant">Show desktop push notifications</span>
+          </div>
+          <input type="checkbox" id="browserNotificationsCheck" class="rounded border-primary/20 text-primary focus:ring-primary/20 h-5 w-5"/>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabContent-privacy" class="hidden flex flex-col gap-4">
+      <div class="flex flex-col gap-3">
+        <div class="flex flex-col gap-1.5">
+          <span class="text-xs font-bold text-on-surface-variant">Export Blog Library</span>
+          <div class="flex gap-2">
+            <button onclick="exportBlogsJSON()" class="flex-1 py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-xs font-bold text-primary flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">download</span> JSON
+            </button>
+            <button onclick="exportBlogsPDF()" class="flex-1 py-2 px-3 border border-primary/20 rounded-xl hover:bg-primary/5 transition-all text-xs font-bold text-primary flex items-center justify-center gap-1.5">
+              <span class="material-symbols-outlined text-[16px]">picture_as_pdf</span> PDF
+            </button>
+          </div>
+        </div>
+        <div class="h-px bg-primary/10 my-1"></div>
+        <div class="flex flex-col gap-2">
+          <span class="text-xs font-bold text-on-surface-variant">Destructive Actions</span>
+          <div class="flex gap-2">
+            <button onclick="clearDraftsAction()" class="flex-1 py-2.5 px-3 border border-error/20 hover:bg-error/5 text-error rounded-xl transition-all text-[11px] font-bold">
+              Clear All Drafts
+            </button>
+            <button onclick="deleteAllBlogsAction()" class="flex-1 py-2.5 px-3 bg-error hover:bg-error/90 text-white rounded-xl transition-all text-[11px] font-bold shadow-md shadow-error/15">
+              Delete All Blogs
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+
+    <div id="tabContent-profile" class="hidden flex flex-col gap-4">
+      <div class="flex flex-col items-center gap-3">
+        <div class="relative h-16 w-16 rounded-full overflow-hidden border border-primary/20 shadow-sm">
+          <img id="settingsUserAvatar" alt="Avatar" src="" class="w-full h-full object-cover"/>
+        </div>
+        <span class="text-[10px] text-on-surface-variant font-bold uppercase tracking-wider" style="font-family:'JetBrains Mono'">Predefined Avatars:</span>
+        <div class="flex gap-2">
+          <img onclick="selectSettingsAvatar('https://lh3.googleusercontent.com/aida-public/AB6AXuB1AIfVwzfLs39GTSOG2BZgqWnfml1fCczbes9e_E1G4LQSAdZzmvhPE8vO0QNEalA0DCVQVapBUoy9aU6hJoItNqojH5GPeuVMP7TEZkVgBh0VL94SU9x8ER8Q_j6Yfdos5rc4C6aPw3g95I-bCtvTiGCiqDZ-asYHzl1oo9n_k5YFelztubHI4JznKXYsY9iy0ml3okCZtWqHfSKw41Z3sKHFqFujkRlEVQZXESxrUzxAjTTkiglVbXATQQEZjAqGIWfNaPvJLvFo')" src="https://lh3.googleusercontent.com/aida-public/AB6AXuB1AIfVwzfLs39GTSOG2BZgqWnfml1fCczbes9e_E1G4LQSAdZzmvhPE8vO0QNEalA0DCVQVapBUoy9aU6hJoItNqojH5GPeuVMP7TEZkVgBh0VL94SU9x8ER8Q_j6Yfdos5rc4C6aPw3g95I-bCtvTiGCiqDZ-asYHzl1oo9n_k5YFelztubHI4JznKXYsY9iy0ml3okCZtWqHfSKw41Z3sKHFqFujkRlEVQZXESxrUzxAjTTkiglVbXATQQEZjAqGIWfNaPvJLvFo" class="h-8 w-8 rounded-full border border-white hover:scale-110 cursor-pointer object-cover"/>
+          <img onclick="selectSettingsAvatar('https://lh3.googleusercontent.com/aida-public/AB6AXuCbAQSEOGn1UCtLYELW_vl5ZG65cM6cgj0ou4FVF8s96qcQKqxKez1d8OpUDOm4A3aY-yV8jFovGuo3toAe2KLrJbHm6Mf4tVxMNHZeZNszENce1RpnsDVFpcpznzpAtWDmLkuoOUoyuouGOc5Vrc_MI-Wfd682tYBJRTg3wJXc6v06B5_wYzE49Txstt70UbNnHmj7oHXW5NzIEz35iqoB5UR-PokDi1pB9PQngy1iUlEGqNGEwHhK9ZQ74kGpe7vBgd8_86coVfw0')" src="https://lh3.googleusercontent.com/aida-public/AB6AXuCbAQSEOGn1UCtLYELW_vl5ZG65cM6cgj0ou4FVF8s96qcQKqxKez1d8OpUDOm4A3aY-yV8jFovGuo3toAe2KLrJbHm6Mf4tVxMNHZeZNszENce1RpnsDVFpcpznzpAtWDmLkuoOUoyuouGOc5Vrc_MI-Wfd682tYBJRTg3wJXc6v06B5_wYzE49Txstt70UbNnHmj7oHXW5NzIEz35iqoB5UR-PokDi1pB9PQngy1iUlEGqNGEwHhK9ZQ74kGpe7vBgd8_86coVfw0" class="h-8 w-8 rounded-full border border-white hover:scale-110 cursor-pointer object-cover"/>
+          <img onclick="selectSettingsAvatar('https://lh3.googleusercontent.com/aida-public/AB6AXuAcQz4RdXSOFWMsdKelIrVYU90KHo7S8LDG1gXl0pDwfeHh_8Z5gya2qN7QP5E66vGEUZh6ELxc3X_AnWLhuti2X7k1BTtxKMeQ_PlDJaHJ8ia4BJHtaP8XRO4TDPF2RhfHIykRbFNYhxY0opI8sHxTRy7dcBfOxtSQ1esgbUm1u9yj6lahxuOZCaJdrrPCzRkWkggB-4JH_VlVnyyokfs6L3lewIkLeu4dj6ohS3Df5OazOocLVoPOOAioA_sq5NpxnWtL41R_CqnH')" src="https://lh3.googleusercontent.com/aida-public/AB6AXuAcQz4RdXSOFWMsdKelIrVYU90KHo7S8LDG1gXl0pDwfeHh_8Z5gya2qN7QP5E66vGEUZh6ELxc3X_AnWLhuti2X7k1BTtxKMeQ_PlDJaHJ8ia4BJHtaP8XRO4TDPF2RhfHIykRbFNYhxY0opI8sHxTRy7dcBfOxtSQ1esgbUm1u9yj6lahxuOZCaJdrrPCzRkWkggB-4JH_VlVnyyokfs6L3lewIkLeu4dj6ohS3Df5OazOocLVoPOOAioA_sq5NpxnWtL41R_CqnH" class="h-8 w-8 rounded-full border border-white hover:scale-110 cursor-pointer object-cover"/>
+        </div>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-on-surface-variant">Display Name</label>
+        <input id="profileSettingsNameInput" class="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-2.5 text-[14px]" placeholder="Your name"/>
+      </div>
+      <div class="flex flex-col gap-1">
+        <label class="text-xs font-bold text-on-surface-variant">Custom Avatar URL (Optional)</label>
+        <input id="profileSettingsAvatarUrlInput" class="w-full bg-white/60 border border-white/80 rounded-xl px-4 py-2.5 text-[14px]" placeholder="https://..." onchange="selectSettingsAvatar(this.value)"/>
+      </div>
+    </div>
+
+    <!-- Footer -->
+    <div class="flex gap-3 justify-end border-t border-primary/10 pt-4 mt-2">
+      <button onclick="closeProfileSettingsModal()" class="px-5 py-2.5 rounded-xl border border-primary/10 text-on-surface-variant font-bold text-xs hover:bg-primary/5 transition-all">Cancel</button>
+      <button onclick="saveProfileSettings()" class="px-5 py-2.5 rounded-xl bg-primary hover:bg-primary/90 text-white font-bold text-xs transition-all shadow-md">Save Settings</button>
+    </div>
+  </div>
+</div>
+
+<!-- Help Modal -->
+<div id="helpModal" class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden">
+  <div class="absolute inset-0 bg-primary/5 backdrop-blur-xl" onclick="closeHelpModal()"></div>
+  <div class="relative glass-elevated w-full max-w-2xl rounded-3xl p-8 shadow-2xl border-white/80 flex flex-col gap-6 max-h-[85vh] overflow-hidden">
+    <!-- Header -->
+    <div class="flex items-center justify-between border-b border-primary/10 pb-3">
+      <h3 class="text-[18px] font-bold text-primary flex items-center gap-2">
+        <span class="material-symbols-outlined">help</span> Help Center
+      </h3>
+      <button onclick="closeHelpModal()" class="material-symbols-outlined text-on-surface-variant hover:text-error">close</button>
+    </div>
+    
+    <!-- Scrolling Content -->
+    <div class="flex-1 overflow-y-auto pr-2 flex flex-col gap-6 text-sm text-on-surface">
+      <!-- Getting Started -->
+      <div class="flex flex-col gap-2">
+        <h4 class="font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:18px;">rocket_launch</span> Getting Started</h4>
+        <ul class="list-disc pl-5 text-on-surface-variant flex flex-col gap-1">
+          <li><strong>How to create your first blog:</strong> Click the "New Post" button in the dashboard, enter a title, write your content, and click "Publish".</li>
+          <li><strong>How to edit & delete a blog:</strong> Use the edit (pencil) and delete (trash bin) buttons on any blog card on the dashboard.</li>
+          <li><strong>How to use the dashboard:</strong> Access stats, browse drafts vs published posts, search, and view activity history using the floating dock and sidebar.</li>
+        </ul>
+      </div>
+
+      <!-- AI Writing Assistant -->
+      <div class="flex flex-col gap-2">
+        <h4 class="font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:18px;">auto_awesome</span> AI Writing Assistant</h4>
+        <ul class="list-disc pl-5 text-on-surface-variant flex flex-col gap-1">
+          <li><strong>What is "Write with AI"?</strong> An integrated helper powered by Gemini to generate drafts or enhance your existing posts.</li>
+          <li><strong>How to generate a blog with AI:</strong> In the editor page, type your topic in the "Write with AI" prompt box and click "Generate Draft".</li>
+          <li><strong>How to pick AI-suggested titles:</strong> Simply click on any suggestion in the "SEO Title Suggestions" sidebar list to auto-write it into your blog title.</li>
+          <li><strong>What does each tone mean?</strong>
+            <ul class="list-circle pl-5 mt-1 flex flex-col gap-0.5">
+              <li><em>Formal:</em> Highly objective, precise, and professional.</li>
+              <li><em>Casual:</em> Friendly, conversational, and easy to read.</li>
+              <li><em>Professional:</em> Polished, structured, and business-ready language.</li>
+            </ul>
+          </li>
+        </ul>
+      </div>
+
+      <!-- FAQs -->
+      <div class="flex flex-col gap-2">
+        <h4 class="font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:18px;">quiz</span> FAQs</h4>
+        <ul class="list-disc pl-5 text-on-surface-variant flex flex-col gap-2">
+          <li><strong>Can I edit AI-generated content?</strong> Yes! Once the AI draft is inserted, you can type, format, and edit it fully in the rich text area.</li>
+          <li><strong>Is my blog data saved automatically?</strong> Yes! A debounced auto-save triggers on every edit and saves your progress to MongoDB.</li>
+          <li><strong>How do I search for a blog?</strong> Type keywords in the header search bar to filter posts dynamically.</li>
+          <li><strong>Can I recover a deleted blog?</strong> Blogs are moved to "Trash" first. You can view trash by clicking "Trash" in the sidebar.</li>
+          <li><strong>What formats can I export in?</strong> PDF and JSON, accessible via Settings under the "Data & Privacy" tab.</li>
+        </ul>
+      </div>
+
+      <!-- Keyboard Shortcuts -->
+      <div class="flex flex-col gap-2">
+        <h4 class="font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:18px;">keyboard</span> Keyboard Shortcuts</h4>
+        <div class="grid grid-cols-2 gap-2 text-xs font-mono bg-primary/5 p-3 rounded-xl border border-primary/10">
+          <div class="flex justify-between border-b border-primary/5 pb-1">
+            <span class="text-on-surface font-semibold">Ctrl + N</span>
+            <span class="text-on-surface-variant">→ &nbsp; New Blog</span>
+          </div>
+          <div class="flex justify-between border-b border-primary/5 pb-1">
+            <span class="text-on-surface font-semibold">Ctrl + S</span>
+            <span class="text-on-surface-variant">→ &nbsp; Save Blog</span>
+          </div>
+          <div class="flex justify-between border-b border-primary/5 pb-1">
+            <span class="text-on-surface font-semibold">Ctrl + E</span>
+            <span class="text-on-surface-variant">→ &nbsp; Edit Blog</span>
+          </div>
+          <div class="flex justify-between border-b border-primary/5 pb-1">
+            <span class="text-on-surface font-semibold">Ctrl + /</span>
+            <span class="text-on-surface-variant">→ &nbsp; Open Help</span>
+          </div>
+        </div>
+      </div>
+
+      <!-- Contact & Support -->
+      <div class="flex flex-col gap-3 border-t border-primary/10 pt-4">
+        <h4 class="font-bold text-primary flex items-center gap-1.5"><span class="material-symbols-outlined" style="font-size:18px;">support_agent</span> Contact & Support</h4>
+        <div class="flex flex-col gap-3 text-xs">
+          <div class="flex justify-between items-center bg-primary/5 p-3 rounded-xl border border-primary/10">
+            <span class="text-on-surface-variant font-bold">- Report a Bug</span>
+            <a href="mailto:support@quillon.ai?subject=Bug Report" class="text-primary font-bold hover:underline flex items-center gap-1">→ &nbsp; [Form / Email]</a>
+          </div>
+          <div class="flex flex-col gap-1.5 bg-primary/5 p-3 rounded-xl border border-primary/10">
+            <span class="text-on-surface-variant font-bold">- Send Feedback</span>
+            <textarea id="feedbackText" class="w-full bg-white/60 border border-white/80 rounded-lg p-2 text-xs focus:ring-1 focus:ring-primary/20 outline-none resize-none" rows="2" placeholder="Tell us what you think... [Text box]"></textarea>
+            <button onclick="submitFeedback()" class="self-end bg-primary text-white font-bold py-1 px-3 rounded-md hover:bg-primary/90 transition-all text-[11px] shadow-sm">Submit</button>
+          </div>
+          <div class="flex justify-between text-on-surface-variant border-t border-primary/5 pt-2">
+            <span>- Version Info</span>
+            <span class="font-mono font-bold">→ &nbsp; v2.0.0</span>
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- AI Generation Modal -->
+<div class="fixed inset-0 z-[100] flex items-center justify-center p-6 hidden" id="aiModal">
+  <div class="absolute inset-0 bg-primary/8 backdrop-blur-xl" onclick="closeAIModal()"></div>
+  <div class="relative glass-elevated w-full max-w-md rounded-[28px] overflow-hidden shadow-2xl border-white/80 p-10 text-center">
+    <div class="relative w-20 h-20 mx-auto mb-7">
+      <div class="absolute inset-0 ai-shimmer rounded-full opacity-25 pulse-ring"></div>
+      <div class="relative bg-white rounded-full w-full h-full flex items-center justify-center shadow-inner">
+        <span class="material-symbols-outlined text-primary animate-pulse" style="font-size:40px;">auto_awesome</span>
+      </div>
+    </div>
+    <h2 class="text-[28px] font-extrabold text-primary mb-3">Quillon AI is Thinking</h2>
+    <p class="text-on-surface-variant text-[14px] mb-7">Crafting your content... Analyzing tone: <span class="text-primary font-bold" id="modalTone">Professional</span>.</p>
+    <div class="w-full bg-surface-container rounded-full h-1.5 mb-7 overflow-hidden">
+      <div class="ai-shimmer h-full rounded-full transition-all duration-700" id="progressBar" style="width:15%"></div>
+    </div>
+    <div class="flex flex-col gap-2 text-left" id="aiSteps">
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-white/50 border border-white/60">
+        <span class="material-symbols-outlined text-primary" style="font-variation-settings:'FILL' 1;font-size:18px;">check_circle</span>
+        <span class="text-[13px] text-on-surface">Analyzing topic & intent...</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-white/50 border border-white/60 opacity-40" id="step2">
+        <span class="material-symbols-outlined text-on-surface-variant" style="font-size:18px;">hourglass_empty</span>
+        <span class="text-[13px] text-on-surface">Generating SEO-rich titles...</span>
+      </div>
+      <div class="flex items-center gap-3 p-3 rounded-xl bg-white/50 border border-white/60 opacity-40" id="step3">
+        <span class="material-symbols-outlined text-on-surface-variant" style="font-size:18px;">hourglass_empty</span>
+        <span class="text-[13px] text-on-surface">Writing introduction paragraph...</span>
+      </div>
+    </div>
+    <button onclick="closeAIModal()" class="mt-8 text-on-surface-variant font-medium text-[13px] hover:text-error transition-colors">Cancel Generation</button>
+  </div>
+</div>
+
+<script>
+  let blogId = null;
+  let selectedTone = 'Professional';
+  let selectedSeoTitle = '';
+  let seoTitles = [];
+  let autoSaveTimer = null;
+  let currentUser = null;
+  let activeThemePreference = 'light';
+
+  // Close dropdowns if clicked outside
+  window.addEventListener('click', (e) => {
+    if (!e.target.closest('#notificationDropdown') && !e.target.closest('#notificationBtn')) {
+      document.getElementById('notificationDropdown').classList.add('hidden');
+    }
+    if (!e.target.closest('#profileDropdown') && !e.target.closest('#headerUserAvatar')) {
+      document.getElementById('profileDropdown').classList.add('hidden');
+    }
+  });
+
+  // ── Init ──────────────────────────────────────────────────────
+  async function init() {
+    await checkAuth();
+
+    // Check if editing existing
+    const pathParts = window.location.pathname.split('/');
+    const id = pathParts[pathParts.length - 1];
+    if (id && id !== 'editor' && id.length > 10) {
+      blogId = id;
+      await loadBlog(id);
+      document.title = 'Edit Post - Quillon';
+    }
+
+    // Bind events
+    document.getElementById('titleInput').addEventListener('input', handleTitleChange);
+    document.getElementById('editorContent').addEventListener('input', handleContentChange);
+    document.addEventListener('mousemove', trackMouse);
+
+    await loadNotifications();
+  }
+
+  async function checkAuth() {
+    try {
+      const res = await fetch('/api/auth/me');
+      if (res.status === 401) {
+        window.location.href = '/login';
+        return;
+      }
+      const json = await res.json();
+      if (json.success && json.data) {
+        currentUser = json.data;
+        updateUserUI(currentUser);
+      } else {
+        window.location.href = '/login';
+      }
+    } catch(e) {
+      window.location.href = '/login';
+    }
+  }
+
+  function updateUserUI(user) {
+    const avatarUrl = user.picture || 'https://lh3.googleusercontent.com/aida-public/AB6AXuB1AIfVwzfLs39GTSOG2BZgqWnfml1fCczbes9e_E1G4LQSAdZzmvhPE8vO0QNEalA0DCVQVapBUoy9aU6hJoItNqojH5GPeuVMP7TEZkVgBh0VL94SU9x8ER8Q_j6Yfdos5rc4C6aPw3g95I-bCtvTiGCiqDZ-asYHzl1oo9n_k5YFelztubHI4JznKXYsY9iy0ml3okCZtWqHfSKw41Z3sKHFqFujkRlEVQZXESxrUzxAjTTkiglVbXATQQEZjAqGIWfNaPvJLvFo';
+    
+    // Header Avatar
+    document.getElementById('headerUserAvatar').src = avatarUrl;
+    
+    // Dropdown details
+    document.getElementById('dropdownUserAvatar').src = avatarUrl;
+    document.getElementById('profileDisplayName').textContent = user.name;
+    document.getElementById('profileDisplayEmail').textContent = user.email;
+    
+    // Settings Avatar
+    document.getElementById('settingsUserAvatar').src = avatarUrl;
+    document.getElementById('profileSettingsNameInput').value = user.name;
+    document.getElementById('profileSettingsAvatarUrlInput').value = user.picture || '';
+
+    // Initialize Preferences
+    activeThemePreference = user.theme || 'light';
+    setThemePreference(activeThemePreference);
+
+    document.getElementById('emailNotificationsCheck').checked = user.emailNotifications !== false;
+    document.getElementById('browserNotificationsCheck').checked = user.browserNotifications !== false;
+
+    // Reset settings tab to Appearance
+    switchSettingsTab('appearance');
+
+    // If author input is empty or Alex Rivera, set it to user's name
+    const authorInput = document.getElementById('authorInput');
+    if (!authorInput.value || authorInput.value === 'Alex Rivera') {
+      authorInput.value = user.name;
+    }
+  }
+
+  async function logoutUser(e) {
+    if (e) e.stopPropagation();
+    try {
+      const res = await fetch('/api/auth/logout', { method: 'POST' });
+      const json = await res.json();
+      if (json.success) {
+        window.location.href = '/login';
+      }
+    } catch(err) {
+      showToast('Logout failed', 'error-t');
+    }
+  }
+
+  // ── Profile Settings Modal ──────────────────────────────────────
+  function openProfileSettingsModal(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('profileSettingsModal').classList.remove('hidden');
+    document.getElementById('profileDropdown').classList.add('hidden');
+  }
+
+  function closeProfileSettingsModal() {
+    document.getElementById('profileSettingsModal').classList.add('hidden');
+  }
+
+  function selectSettingsAvatar(url) {
+    document.getElementById('settingsUserAvatar').src = url;
+    document.getElementById('profileSettingsAvatarUrlInput').value = url;
+  }
+
+  async function saveProfileSettings() {
+    const name = document.getElementById('profileSettingsNameInput').value.trim();
+    const picture = document.getElementById('profileSettingsAvatarUrlInput').value.trim();
+    const emailNotifications = document.getElementById('emailNotificationsCheck').checked;
+    const browserNotifications = document.getElementById('browserNotificationsCheck').checked;
+    
+    if (!name) {
+      showToast('Name is required', 'error-t');
+      return;
+    }
+
+    try {
+      const res = await fetch('/api/users/profile', {
+        method: 'PUT',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ 
+          name, 
+          picture,
+          theme: activeThemePreference,
+          emailNotifications,
+          browserNotifications
+        })
+      });
+      const json = await res.json();
+      if (json.success && json.data) {
+        currentUser = json.data;
+        updateUserUI(currentUser);
+        closeProfileSettingsModal();
+        showToast('✨ Settings saved successfully!');
+        loadNotifications();
+      }
+    } catch(err) {
+      showToast('Failed to save settings', 'error-t');
+    }
+  }
+
+  // Settings Tab Navigation
+  function switchSettingsTab(tabName) {
+    const tabs = ['profile', 'appearance', 'notifications', 'privacy'];
+    tabs.forEach(t => {
+      document.getElementById(`tabContent-${t}`).classList.add('hidden');
+      document.getElementById(`tabBtn-${t}`).classList.remove('border-primary', 'text-primary');
+      document.getElementById(`tabBtn-${t}`).classList.add('border-transparent', 'text-on-surface-variant');
+    });
+    document.getElementById(`tabContent-${tabName}`).classList.remove('hidden');
+    document.getElementById(`tabBtn-${tabName}`).classList.add('border-primary', 'text-primary');
+    document.getElementById(`tabBtn-${tabName}`).classList.remove('border-transparent', 'text-on-surface-variant');
+  }
+
+  // Theme Settings
+  function setThemePreference(theme) {
+    activeThemePreference = theme;
+    ['light', 'dark', 'system'].forEach(t => {
+      const btn = document.getElementById(`themeBtn-${t}`);
+      if (btn) {
+        if (t === theme) {
+          btn.className = "p-3 border rounded-xl flex flex-col items-center gap-1.5 hover:bg-primary/5 transition-all text-xs font-bold bg-primary/10 border-primary text-primary";
+        } else {
+          btn.className = "p-3 border rounded-xl flex flex-col items-center gap-1.5 hover:bg-primary/5 transition-all text-xs font-bold border-primary/20 text-on-surface-variant dark:text-eef0ff";
+        }
+      }
+    });
+    applyTheme(theme);
+  }
+
+  function applyTheme(theme) {
+    localStorage.setItem('lumina-theme', theme);
+    if (theme === 'dark' || (theme === 'system' && window.matchMedia('(prefers-color-scheme: dark)').matches)) {
+      document.documentElement.classList.add('dark');
+      document.documentElement.classList.remove('light');
+    } else {
+      document.documentElement.classList.add('light');
+      document.documentElement.classList.remove('dark');
+    }
+  }
+
+  // Privacy Exports & Actions
+  async function exportBlogsJSON() {
+    try {
+      const res = await fetch('/api/blogs');
+      const json = await res.json();
+      if (!json.success || !json.data) {
+        showToast('Export failed', 'error-t');
+        return;
+      }
+      const dataStr = "data:text/json;charset=utf-8," + encodeURIComponent(JSON.stringify(json.data, null, 2));
+      const downloadAnchor = document.createElement('a');
+      downloadAnchor.setAttribute("href",     dataStr);
+      downloadAnchor.setAttribute("download", `quillon_blogs_export_${Date.now()}.json`);
+      document.body.appendChild(downloadAnchor);
+      downloadAnchor.click();
+      downloadAnchor.remove();
+      showToast('📥 JSON export downloaded!');
+    } catch(e) {
+      showToast('Export failed', 'error-t');
+    }
+  }
+
+  async function exportBlogsPDF() {
+    try {
+      const res = await fetch('/api/blogs');
+      const json = await res.json();
+      if (!json.success || !json.data || json.data.length === 0) {
+        showToast('No blogs to export', 'error-t');
+        return;
+      }
+      
+      const printWindow = window.open('', '_blank');
+      let html = `
+        <html>
+        <head>
+          <title>Quillon Blog Library Export</title>
+          <style>
+            body { font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif; padding: 40px; color: #111; line-height: 1.6; }
+            h1 { text-align: center; color: #4648d4; margin-bottom: 5px; }
+            h2 { color: #131b2e; border-bottom: 2px solid #eaedff; padding-bottom: 8px; margin-top: 40px; page-break-before: always; }
+            .meta { font-size: 13px; color: #666; margin-bottom: 20px; font-style: italic; }
+            .content { font-size: 15px; text-align: justify; }
+            .content h2 { page-break-before: auto; margin-top: 20px; font-size: 18px; border: none; padding: 0; }
+            .summary { background: #faf8ff; border-left: 3px solid #6063ee; padding: 12px 16px; margin-bottom: 25px; font-style: italic; border-radius: 4px; }
+            @media print {
+              body { padding: 0; }
+            }
+          </style>
+        </head>
+        <body>
+          <h1>Quillon Blog Library Export</h1>
+          <p style="text-align:center; font-size:13px; color:#555;">Exported on: ${new Date().toLocaleDateString()}</p>
+          <div style="height: 1px; bg-color: #eaedff; margin: 20px 0;"></div>
+      `;
+
+      json.data.forEach(blog => {
+        const date = new Date(blog.createdAt).toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+        html += `
+          <h2>${blog.title}</h2>
+          <div class="meta">Status: ${blog.status} | Category: ${blog.category} | Created: ${date} | Views: ${blog.views}</div>
+          ${blog.summary ? `<div class="summary"><strong>Summary:</strong> ${blog.summary}</div>` : ''}
+          <div class="content">${blog.content}</div>
+        `;
+      });
+
+      html += `
+        </body>
+        </html>
+      `;
+
+      printWindow.document.write(html);
+      printWindow.document.close();
+      printWindow.focus();
+      setTimeout(() => {
+        printWindow.print();
+        printWindow.close();
+      }, 500);
+      showToast('🖨️ PDF print prompt opened!');
+    } catch(e) {
+      showToast('Failed to generate export', 'error-t');
+    }
+  }
+
+  async function clearDraftsAction() {
+    if (!confirm('Are you sure you want to clear ALL draft blog posts? This action cannot be undone.')) return;
+    try {
+      const res = await fetch('/api/blogs/clear-drafts', { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        showToast('🧹 All drafts deleted successfully');
+        const currentStatus = document.getElementById('statusSelect').value;
+        if (currentStatus === 'draft') {
+          setTimeout(() => window.location.href = '/', 1000);
+        } else {
+          loadNotifications();
+        }
+      }
+    } catch(e) {
+      showToast('Failed to delete drafts', 'error-t');
+    }
+  }
+
+  async function deleteAllBlogsAction() {
+    if (!confirm('🚨 WARNING: Are you sure you want to delete ALL blog posts? This will delete your entire library permanently. This action cannot be undone.')) return;
+    try {
+      const res = await fetch('/api/blogs/clear-all', { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        showToast('🗑️ All blogs deleted successfully');
+        setTimeout(() => window.location.href = '/', 1000);
+      }
+    } catch(e) {
+      showToast('Failed to delete all blogs', 'error-t');
+    }
+  }
+
+  // ── Dropdowns Toggling ──────────────────────────────────────────
+  function toggleNotifications(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('notificationDropdown').classList.toggle('hidden');
+    document.getElementById('profileDropdown').classList.add('hidden');
+  }
+
+  function toggleProfileDropdown(e) {
+    if (e) e.stopPropagation();
+    document.getElementById('profileDropdown').classList.toggle('hidden');
+    document.getElementById('notificationDropdown').classList.add('hidden');
+  }
+
+  // ── Notifications Logic ─────────────────────────────────────────
+  async function loadNotifications() {
+    try {
+      const res = await fetch('/api/notifications');
+      const json = await res.json();
+      if (json.success) {
+        renderNotifications(json.data || []);
+      }
+    } catch(e) {}
+  }
+
+  function renderNotifications(notifs) {
+    const list = document.getElementById('notificationsList');
+    const badge = document.getElementById('notificationBadge');
+    list.innerHTML = '';
+
+    const unread = notifs.filter(n => !n.read);
+    if (unread.length > 0) {
+      badge.classList.remove('hidden');
+    } else {
+      badge.classList.add('hidden');
+    }
+
+    if (notifs.length === 0) {
+      list.innerHTML = `<div class="py-4 text-center text-on-surface-variant/50 italic">No new notifications</div>`;
+      return;
+    }
+
+    notifs.forEach(n => {
+      const div = document.createElement('div');
+      div.className = `p-2.5 rounded-xl border flex gap-2.5 items-start cursor-pointer transition-all ${n.read ? 'bg-white/20 border-white/40 opacity-75' : 'bg-primary/5 border-primary/20 font-semibold'}`;
+      
+      let icon = 'info';
+      let iconColor = 'text-primary';
+      if (n.type === 'success') { icon = 'check_circle'; iconColor = 'text-tertiary'; }
+      if (n.type === 'warning') { icon = 'warning'; iconColor = 'text-error'; }
+
+      div.innerHTML = `
+        <span class="material-symbols-outlined ${iconColor} mt-0.5" style="font-size:16px;">${icon}</span>
+        <div class="flex-1 min-w-0 flex flex-col">
+          <span class="text-on-surface leading-tight font-bold">${escHtml(n.title)}</span>
+          <span class="text-on-surface-variant/80 text-[10px] leading-snug mt-0.5">${escHtml(n.message)}</span>
+          <span class="text-[9px] text-on-surface-variant/50 mt-1" style="font-family:'JetBrains Mono'">${formatDate(n.createdAt)}</span>
+        </div>
+      `;
+
+      if (!n.read) {
+        div.onclick = (e) => markNotificationRead(n._id, e);
+      }
+      list.appendChild(div);
+    });
+  }
+
+  async function markNotificationRead(id, e) {
+    if (e) e.stopPropagation();
+    try {
+      const res = await fetch(`/api/notifications/${id}/read`, { method: 'PUT' });
+      const json = await res.json();
+      if (json.success) {
+        loadNotifications();
+      }
+    } catch(err) {}
+  }
+
+  async function markAllNotificationsRead(e) {
+    if (e) e.stopPropagation();
+    try {
+      const res = await fetch('/api/notifications/read-all', { method: 'PUT' });
+      const json = await res.json();
+      if (json.success) {
+        loadNotifications();
+        showToast('All notifications marked as read');
+      }
+    } catch(err) {}
+  }
+
+  async function clearAllNotifications(e) {
+    if (e) e.stopPropagation();
+    try {
+      const res = await fetch('/api/notifications', { method: 'DELETE' });
+      const json = await res.json();
+      if (json.success) {
+        loadNotifications();
+        showToast('Notifications cleared');
+      }
+    } catch(err) {}
+  }
+
+  function formatDate(dateStr) {
+    if (!dateStr) return '';
+    const d = new Date(dateStr);
+    const now = new Date();
+    const diff = now - d;
+    const mins = Math.floor(diff / 60000);
+    const hours = Math.floor(diff / 3600000);
+    const days = Math.floor(diff / 86400000);
+    
+    if (mins < 2) return 'Just now';
+    if (mins < 60) return `${mins}m ago`;
+    if (hours < 24) return `${hours}h ago`;
+    if (days === 1) return 'Yesterday';
+    return d.toLocaleDateString('en-US', { month: 'short', day: 'numeric', year: 'numeric' });
+  }
+
+  // ── Blog Loading ───────────────────────────────────────────────
+  async function loadBlog(id) {
+    try {
+      const res = await fetch(`/api/blogs/${id}`);
+      const json = await res.json();
+      if (!json.success) return;
+      const b = json.data;
+      document.getElementById('titleInput').value = b.title || '';
+      document.getElementById('editorContent').innerHTML = b.content || '';
+      document.getElementById('summaryText').value = b.summary || b.excerpt || '';
+      document.getElementById('authorInput').value = b.author || (currentUser ? currentUser.name : 'Alex Rivera');
+      document.getElementById('categorySelect').value = b.category || 'General';
+      document.getElementById('tagsInput').value = (b.tags || []).join(', ');
+      document.getElementById('statusSelect').value = b.status || 'draft';
+      selectedSeoTitle = b.seoTitle || '';
+      if (b.title) generateSeoSuggestions(b.title);
+      updateWordCount();
+      updateLastSaved(b.updatedAt);
+    } catch(e) {
+      showToast('Failed to load blog', 'error-t');
+    }
+  }
+
+  // ── AI Features ───────────────────────────────────────────────
+  function setTone(btn, tone) {
+    document.querySelectorAll('.tone-btn').forEach(b => b.classList.remove('active'));
+    btn.classList.add('active');
+    selectedTone = tone;
+    document.getElementById('modalTone').textContent = tone;
+  }
+
+  async function generateDraft() {
+    const prompt = document.getElementById('aiPrompt').value.trim();
+    if (!prompt) {
+      showToast('Please enter a topic first', 'error-t');
+      return;
+    }
+
+    showAIModal();
+    await stepProgress(30, 'step2', 700);
+
+    try {
+      const res = await fetch('/api/ai/generate', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ prompt, tone: selectedTone })
+      });
+
+      const json = await res.json();
+
+      if (json.invalid || !json.success) {
+        closeAIModal();
+        const msg = res.status === 429
+          ? '⏳ AI is busy — wait 15 seconds and try again.'
+          : json.error || 'Please enter a valid blog topic.';
+        showInvalidPrompt(msg);
+        return;
+      }
+
+      await stepProgress(80, 'step3', 600);
+      await stepProgress(100, null, 400);
+      await sleep(300);
+      closeAIModal();
+
+      const d = json.data;
+      document.getElementById('titleInput').value     = d.title   || '';
+      document.getElementById('editorContent').innerHTML = d.content || '';
+      document.getElementById('summaryText').value    = d.summary || '';
+      if (d.tags && d.tags.length) {
+        document.getElementById('tagsInput').value = d.tags.join(', ');
+      }
+
+      if (d.seoTitles && d.seoTitles.length) {
+        seoTitles = d.seoTitles;
+        selectedSeoTitle = d.seoTitles[0];
+        const list = document.getElementById('seoList');
+        list.innerHTML = d.seoTitles.map((s, i) => `
+          <div class="seo-item ${i===0 ? 'selected' : ''}" onclick="selectSeoTitle(this,'${escJs(s)}')">
+            <div>${escHtml(s)}</div>
+            ${i===0 ? '<span style="font-family:JetBrains Mono;font-size:10px;color:#4648d4;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-top:3px;">CURRENT SELECTION</span>' : ''}
+          </div>`).join('');
+      } else {
+        generateSeoSuggestions(d.title);
+      }
+
+      updateWordCount();
+      showToast('✨ AI draft generated!');
+      loadNotifications();
+
+    } catch (err) {
+      closeAIModal();
+      showToast('Network error — check your connection', 'error-t');
+    }
+  }
+
+  function showInvalidPrompt(msg) {
+    let el = document.getElementById('promptError');
+    if (!el) {
+      el = document.createElement('p');
+      el.id = 'promptError';
+      el.style.cssText = 'font-size:13px;color:#ba1a1a;margin-top:8px;font-weight:600;display:flex;align-items:center;gap:6px;';
+      document.getElementById('aiPrompt').closest('.relative').insertAdjacentElement('afterend', el);
+    }
+    el.innerHTML = `<span class="material-symbols-outlined" style="font-size:16px;">error</span> ${escHtml(msg)}`;
+    el.style.opacity = '1';
+    clearTimeout(el._timer);
+    el._timer = setTimeout(() => { el.style.opacity = '0'; }, 5000);
+  }
+
+  function generateSeoSuggestions(title) {
+    if (!title || title.length < 5) return;
+    const base = title.replace(/^(The |A |An )/i, '');
+    const suggestions = [
+      `Why ${base} Matters More Than Ever`,
+      title,
+      `How to Master ${base}: A Complete Guide`,
+      `${base}: Best Practices for 2026`,
+      `The Ultimate Guide to ${base}`
+    ];
+    seoTitles = suggestions;
+    const list = document.getElementById('seoList');
+    list.innerHTML = suggestions.map((s, i) => `
+      <div class="seo-item ${s === title || (i===1) ? 'selected' : ''}" onclick="selectSeoTitle(this,'${escJs(s)}')">
+        <div>${escHtml(s)}</div>
+        ${s === title || i===1 ? '<span style="font-family:JetBrains Mono;font-size:10px;color:#4648d4;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-top:3px;">CURRENT SELECTION</span>' : ''}
+      </div>
+    `).join('');
+    if (!selectedSeoTitle) selectedSeoTitle = title;
+    return suggestions;
+  }
+
+  function selectSeoTitle(el, title) {
+    document.querySelectorAll('.seo-item').forEach(e => {
+      e.classList.remove('selected');
+      const sub = e.querySelector('span');
+      if (sub) sub.remove();
+    });
+    el.classList.add('selected');
+    el.insertAdjacentHTML('beforeend', '<span style="font-family:JetBrains Mono;font-size:10px;color:#4648d4;text-transform:uppercase;letter-spacing:0.05em;display:block;margin-top:3px;">CURRENT SELECTION</span>');
+    selectedSeoTitle = title;
+    
+    // Auto-write to the left side's current blog title input
+    document.getElementById('titleInput').value = title;
+    scheduleAutoSave();
+  }
+
+  function generateSummary() {
+    const content = document.getElementById('editorContent').innerText;
+    const title = document.getElementById('titleInput').value;
+    if (!content && !title) return;
+    const text = content || title;
+    const summary = text.substring(0, 180).trim() + (text.length > 180 ? '...' : '');
+    document.getElementById('summaryText').value = summary;
+  }
+
+  async function enhanceWithAI() {
+    const editorEl = document.getElementById('editorContent');
+    const content = editorEl.innerHTML;
+    if (!editorEl.innerText.trim()) {
+      showToast('Write something first!', 'error-t');
+      return;
+    }
+
+    const btn = document.getElementById('enhanceBtn');
+    if (!btn) return;
+    const title = document.getElementById('titleInput').value.trim() || 'Untitled Blog';
+    
+    // Set loading state
+    btn.disabled = true;
+    btn.classList.add('opacity-50', 'cursor-not-allowed', 'animate-spin');
+    btn.textContent = 'sync';
+    
+    showToast('✨ Enhancing your writing...');
+
+    try {
+      const res = await fetch('/api/ai/enhance', {
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify({ content, tone: selectedTone, title })
+      });
+
+      const json = await res.json();
+
+      if (json.success && json.enhancedContent) {
+        editorEl.innerHTML = json.enhancedContent;
+        updateWordCount();
+        scheduleAutoSave();
+        showToast('✦ Content enhanced!');
+        loadNotifications();
+      } else {
+        showToast(json.error || 'Failed to enhance content', 'error-t');
+      }
+    } catch (err) {
+      showToast('Network error — check your connection', 'error-t');
+    } finally {
+      // Restore button state
+      btn.disabled = false;
+      btn.classList.remove('opacity-50', 'cursor-not-allowed', 'animate-spin');
+      btn.textContent = 'auto_awesome';
+    }
+  }
+
+  // ── Editor Events ─────────────────────────────────────────────
+  function handleTitleChange(e) {
+    clearTimeout(window._titleTimer);
+    window._titleTimer = setTimeout(() => {
+      generateSeoSuggestions(e.target.value);
+    }, 600);
+    scheduleAutoSave();
+  }
+
+  function handleContentChange() {
+    updateWordCount();
+    scheduleAutoSave();
+  }
+
+  function updateWordCount() {
+    const text = document.getElementById('editorContent').innerText.trim();
+    const words = text ? text.split(/\s+/).length : 0;
+    document.getElementById('wordCount').textContent = `${words} word${words !== 1 ? 's' : ''}`;
+  }
+
+  function scheduleAutoSave() {
+    clearTimeout(autoSaveTimer);
+    autoSaveTimer = setTimeout(() => {
+      if (blogId) saveDraft(true);
+    }, 3000);
+  }
+
+  // ── Toolbar ───────────────────────────────────────────────────
+  function fmt(cmd) {
+    document.getElementById('editorContent').focus();
+    document.execCommand(cmd, false, null);
+  }
+
+  function insertHeading() {
+    document.getElementById('editorContent').focus();
+    const sel = window.getSelection();
+    if (sel && sel.rangeCount) {
+      const text = sel.toString() || 'Heading';
+      document.execCommand('insertHTML', false, `<h2 style="font-size:22px;font-weight:700;color:#4648d4;margin:20px 0 10px;">${text}</h2>`);
+    }
+  }
+
+  // Links & Images
+  function insertLink() {
+    const url = prompt('Enter URL:');
+    if (url) {
+      document.getElementById('editorContent').focus();
+      document.execCommand('createLink', false, url);
+    }
+  }
+
+  function insertImage() {
+    const url = prompt('Enter image URL:');
+    if (url) {
+      document.getElementById('editorContent').focus();
+      document.execCommand('insertHTML', false, `<img src="${url}" style="max-width:100%;border-radius:12px;margin:12px 0;" alt="Blog image"/>`);
+    }
+  }
+
+  // ── Save / Publish ────────────────────────────────────────────
+  async function saveDraft(silent = false) {
+    const data = collectFormData('draft');
+    try {
+      const res = blogId
+        ? await fetch(`/api/blogs/${blogId}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) })
+        : await fetch('/api/blogs', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+      const json = await res.json();
+      if (json.success) {
+        if (!blogId) {
+          blogId = json.data._id;
+          window.history.replaceState({}, '', `/editor/${blogId}`);
+        }
+        updateLastSaved(json.data.updatedAt);
+        if (!silent) {
+          showToast('💾 Draft saved!');
+          loadNotifications();
+        }
+      }
+    } catch(e) {
+      if (!silent) showToast('Save failed', 'error-t');
+    }
+  }
+
+  async function publishBlog() {
+    const title = document.getElementById('titleInput').value.trim();
+    if (!title) { showToast('Please add a title first', 'error-t'); return; }
+    const content = document.getElementById('editorContent').innerHTML.trim();
+    if (!content || content === '<br>') { showToast('Please write some content', 'error-t'); return; }
+
+    const data = collectFormData('published');
+    try {
+      const res = blogId
+        ? await fetch(`/api/blogs/${blogId}`, { method: 'PUT', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) })
+        : await fetch('/api/blogs', { method: 'POST', headers: {'Content-Type':'application/json'}, body: JSON.stringify(data) });
+      const json = await res.json();
+      if (json.success) {
+        showToast('🚀 Published successfully!');
+        setTimeout(() => window.location.href = '/', 1200);
+      }
+    } catch(e) {
+      showToast('Publish failed', 'error-t');
+    }
+  }
+
+  function collectFormData(status) {
+    const rawStatus = document.getElementById('statusSelect').value;
+    return {
+      title: document.getElementById('titleInput').value.trim(),
+      content: document.getElementById('editorContent').innerHTML,
+      status: status || rawStatus,
+      category: document.getElementById('categorySelect').value,
+      tags: document.getElementById('tagsInput').value.split(',').map(t => t.trim()).filter(Boolean),
+      author: document.getElementById('authorInput').value.trim() || (currentUser ? currentUser.name : 'Alex Rivera'),
+      summary: document.getElementById('summaryText').value,
+      seoTitle: selectedSeoTitle || document.getElementById('titleInput').value.trim()
+    };
+  }
+
+  function goBack() { window.location.href = '/'; }
+
+  // ── AI Modal ──────────────────────────────────────────────────
+  function showAIModal() {
+    document.getElementById('aiModal').classList.remove('hidden');
+    document.getElementById('progressBar').style.width = '15%';
+    document.getElementById('step2').classList.add('opacity-40');
+    document.getElementById('step3').classList.add('opacity-40');
+  }
+
+  function closeAIModal() {
+    document.getElementById('aiModal').classList.add('hidden');
+  }
+
+  async function stepProgress(pct, stepId, delay) {
+    document.getElementById('progressBar').style.width = pct + '%';
+    if (stepId) {
+      await sleep(delay * 0.4);
+      const el = document.getElementById(stepId);
+      el.classList.remove('opacity-40');
+      el.querySelector('.material-symbols-outlined').textContent = 'check_circle';
+      el.querySelector('.material-symbols-outlined').style.color = '#4648d4';
+    }
+    await sleep(delay);
+  }
+
+  // ── Helpers ───────────────────────────────────────────────────
+  function trackMouse(e) {
+    document.body.style.setProperty('--mx', (e.clientX / window.innerWidth * 100) + '%');
+    document.body.style.setProperty('--my', (e.clientY / window.innerHeight * 100) + '%');
+  }
+
+  function updateLastSaved(dateStr) {
+    if (!dateStr) return;
+    const d = new Date(dateStr);
+    document.getElementById('lastSaved').textContent = `Last saved ${d.toLocaleTimeString('en-US',{hour:'2-digit',minute:'2-digit'})}`;
+  }
+
+  function showToast(msg, cls = 'success') {
+    const t = document.getElementById('toast');
+    t.className = `toast ${cls}`;
+    t.textContent = msg;
+    t.classList.add('show');
+    setTimeout(() => t.classList.remove('show'), 2800);
+  }
+
+  function escHtml(s) { return (s||'').replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;').replace(/"/g,'&quot;'); }
+  function escJs(s) { return (s||'').replace(/'/g,"\\'").replace(/"/g,'\\"'); }
+  function sleep(ms) { return new Promise(r => setTimeout(r, ms)); }
+
+  // ── Help Modal Handlers ──────────────────────────────────────
+  function openHelpModal() {
+    document.getElementById('helpModal').classList.remove('hidden');
+  }
+  function closeHelpModal() {
+    document.getElementById('helpModal').classList.add('hidden');
+  }
+  function submitFeedback() {
+    const feedback = document.getElementById('feedbackText').value.trim();
+    if (!feedback) {
+      showToast('Please enter some feedback first', 'error-t');
+      return;
+    }
+    document.getElementById('feedbackText').value = '';
+    showToast('✨ Feedback received! Thank you!');
+  }
+
+  // ── Keyboard Shortcuts listener ───────────────────────────────
+  window.addEventListener('keydown', (e) => {
+    if (e.ctrlKey) {
+      const key = e.key.toLowerCase();
+      if (key === 'n') {
+        e.preventDefault();
+        window.location.href = '/editor';
+      } else if (key === 's') {
+        e.preventDefault();
+        saveDraft();
+      } else if (key === 'e') {
+        e.preventDefault();
+        document.getElementById('titleInput').focus();
+        showToast('Focused title input');
+      } else if (e.key === '/' || e.code === 'Slash') {
+        e.preventDefault();
+        openHelpModal();
+      }
+    }
+  });
+
+  init();
+</script>
+</body>
+</html>
